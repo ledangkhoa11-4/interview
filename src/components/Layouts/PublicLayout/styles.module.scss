@@ -1,0 +1,11 @@
+.publicLayout {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  .container {
+    flex: 1;
+    margin-top: var(--headerHeight);
+    padding-top: 48px;
+    padding-bottom: 48px;
+  }
+}

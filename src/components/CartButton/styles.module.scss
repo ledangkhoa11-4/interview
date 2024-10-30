@@ -1,0 +1,7 @@
+.container {
+  >button {
+    &:hover {
+      background-color: var(--buttonBackground-hover);
+    }
+  }
+}
