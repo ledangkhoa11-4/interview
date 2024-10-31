@@ -1,8 +1,8 @@
-@use './fonts.scss' as *;
+@use "./fonts.scss" as *;
 
 :root {
   // COLORS
-  --primary: #E1E9FF;
+  --primary: #e1e9ff;
   --secondary: #e45858;
   --black: #2b2c34;
   --white: #fffffe;
@@ -13,12 +13,17 @@
 
   // OTHERS
   --text: #2b2c34;
-  --background: #fffffe;
+  --background: #ffffff;
   --active: #cccccc25;
   --boxShadow: 0 3px 6px rgba(25, 30, 36, 0.16), 0 -1px 4px rgba(25, 30, 36, 0.04);
   --buttonBackground: #e5e7eb;
   --buttonBackground-hover: rgba(73, 70, 255, 0.19);
+  --dropdownBoxShadow: #94a3b830 0px 0px 8px 0px;
   --headerHeight: 80px;
+  --filterBackground: #f6f6f6;
+  --filterBackgroundActive: #ececec;
+  --filterColorBlur: #777;
+  --rowBackground: #e1e9ff;
 }
 
 html,
@@ -27,7 +32,7 @@ body {
   padding: 0 !important;
   overflow-x: hidden !important;
   font-size: 16px;
-  font-family: 'Roboto', sans-serif;
+  font-family: "Roboto", sans-serif;
   color: var(--text);
   background-color: var(--background);
   -webkit-font-smoothing: antialiased;

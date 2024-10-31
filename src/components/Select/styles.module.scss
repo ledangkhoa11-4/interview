@@ -1,0 +1,10 @@
+.active {
+  [class~="react-select__control"] {
+    background: var(--filterBackgroundActive);
+  }
+  [class~="react-select__placeholder"],
+  [class~="react-select__single-value"],
+  [class~="react-select__indicator"] {
+    color: var(--text) !important;
+  }
+}
