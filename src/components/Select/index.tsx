@@ -1,7 +1,8 @@
 import { memo } from "react";
 import classes from "./styles.module.scss";
-import ReactSelect, { components, CSSObjectWithLabel, GroupBase, SingleValueProps, StylesConfig } from "react-select";
+import ReactSelect, { components, CSSObjectWithLabel, GroupBase, MultiValueProps, OptionProps, SingleValueProps, StylesConfig } from "react-select";
 import clsx from "clsx";
+import { CheckIcon } from "assets";
 
 const styles = (): StylesConfig<any, boolean, GroupBase<unknown>> => ({
   indicatorSeparator: () =>
@@ -11,7 +12,7 @@ const styles = (): StylesConfig<any, boolean, GroupBase<unknown>> => ({
   indicatorsContainer: (provided, state) =>
     ({
       ...provided,
-      "> div": { color: state.hasValue ? "var(--text)" : "var(--filterColorBlur)", padding: "8px 16px 8px 4px" },
+      "> div:last-child": { color: state.hasValue ? "var(--text)" : "var(--filterColorBlur)", padding: "8px 16px 8px 4px" },
     } as CSSObjectWithLabel),
   container: (provided) =>
     ({
@@ -24,34 +25,59 @@ const styles = (): StylesConfig<any, boolean, GroupBase<unknown>> => ({
       paddingLeft: 16,
       cursor: "pointer",
       width: "fit-content",
-      minWidth: 150,
-      maxWidth: 200,
+      maxWidth: 250,
       border: "none",
       borderRadius: 16,
       boxShadow: "none",
-      background: state.hasValue ? "var(--filterBackgroundActive)" : "var(--filterBackground)",
+      background: state.hasValue || state.isFocused ? "var(--filterBackgroundActive)" : "var(--filterBackground)",
       "&:hover": {
+        background: "var(--filterBackgroundActive)",
         ".react-select__placeholder": {
           color: "var(--text)",
         },
-        ".react-select__indicator": {
+        ".react-select__dropdown-indicator": {
           color: "var(--text)",
         },
         ".react-select__single-value": {
           color: "var(--text)",
         },
       },
+      ...(state.isFocused
+        ? {
+            ".react-select__placeholder": {
+              color: "var(--text)",
+            },
+            ".react-select__dropdown-indicator": {
+              color: "var(--text)",
+            },
+            ".react-select__single-value": {
+              color: "var(--text)",
+            },
+          }
+        : {}),
     } as CSSObjectWithLabel),
-  valueContainer: (provided) =>
+  clearIndicator: (provided) =>
+    ({
+      ...provided,
+      padding: "8px 4px 8px 8px !important",
+      color: "var(--filterColorBlur)",
+      "&:hover": {
+        color: "var(--text)",
+      },
+    } as CSSObjectWithLabel),
+  valueContainer: (provided, state) =>
     ({
       ...provided,
       paddingLeft: 0,
+      color: state.hasValue ? "var(--text)" : "var(--filterColorBlur)",
+      fontSize: 14,
+      fontWeight: 600,
     } as CSSObjectWithLabel),
   placeholder: (provided, state) =>
     ({
       ...provided,
       color: state.hasValue ? "var(--text)" : "var(--filterColorBlur)",
-      fontSize: 13,
+      fontSize: 14,
       fontWeight: 600,
       margin: 0,
       overflow: "hidden",
@@ -59,6 +85,14 @@ const styles = (): StylesConfig<any, boolean, GroupBase<unknown>> => ({
       whiteSpace: "nowrap",
     } as CSSObjectWithLabel),
   singleValue: (provided, state) =>
+    ({
+      ...provided,
+      color: state.hasValue ? "var(--text)" : "var(--filterColorBlur)",
+      fontSize: 12,
+      fontWeight: 600,
+      margin: 0,
+    } as CSSObjectWithLabel),
+  multiValueLabel: (provided, state) =>
     ({
       ...provided,
       color: state.hasValue ? "var(--text)" : "var(--filterColorBlur)",
@@ -85,17 +119,18 @@ const styles = (): StylesConfig<any, boolean, GroupBase<unknown>> => ({
       margin: 0,
       width: 250,
     } as CSSObjectWithLabel),
-  option: (provided, state) =>
+  option: (provided) =>
     ({
       ...provided,
       cursor: "pointer",
-      color: `var(--text)`,
+      color: "var(--text)",
       background: "var(--white)",
       borderRadius: 4,
       wordBreak: "break-all",
-      fontSize: 12,
+      fontSize: 14,
       fontWeight: 600,
       transition: "all 0.2s",
+      "text-transform": "capitalize",
       "&:hover": {
         background: "var(--rowBackground)",
         transition: "all 0.2s",
@@ -125,11 +160,35 @@ const Select: React.FC<SelectProps> = memo((props: SelectProps) => {
     <components.SingleValue {...props}>{label ? `${label} ${children}` : children}</components.SingleValue>
   );
 
+  const MultiValue = (props: MultiValueProps) => {
+    const { index, getValue, selectProps } = props;
+
+    const valueCount = getValue().length;
+
+    return <>{valueCount === 0 ? `${selectProps.placeholder}` : index === 0 ? `${props.selectProps.placeholder} (${valueCount})` : null}</>;
+  };
+
+  const Option = ({ children, ...props }: OptionProps) => {
+    return (
+      <components.Option {...props}>
+        {props.isSelected ? (
+          <div className={classes.optionSelected}>
+            <span>{children}</span>
+            <CheckIcon />
+          </div>
+        ) : (
+          children
+        )}
+      </components.Option>
+    );
+  };
+
   return (
     <ReactSelect
       className={clsx(className, { [classes.active]: active })}
       classNamePrefix="react-select"
       isSearchable={false}
+      isClearable={true}
       closeMenuOnSelect={!isMulti}
       hideSelectedOptions={false}
       blurInputOnSelect={false}
@@ -140,7 +199,7 @@ const Select: React.FC<SelectProps> = memo((props: SelectProps) => {
       getOptionValue={(option: any) => option?.[bindValue || "value"]}
       getOptionLabel={(option: any) => option?.[bindLabel || "label"]}
       noOptionsMessage={() => "No results found"}
-      components={{ SingleValue }}
+      components={{ SingleValue, Option, MultiValue }}
       {...rest}
     />
   );

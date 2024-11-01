@@ -1,4 +1,4 @@
-import apiService from "services/apiServices";
+import apiService from "services/apiService";
 import { call, put, takeLatest } from "redux-saga/effects";
 import apiRoutes from "configs/apiRoutes";
 import { setProducts } from "appRedux/reducers/products";

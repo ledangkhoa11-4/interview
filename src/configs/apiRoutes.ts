@@ -1,6 +1,7 @@
 const apiRoutes = {
   products: {
     default: '/products',
+    categories: '/products/categories',
   },
 };
 

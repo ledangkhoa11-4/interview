@@ -4,7 +4,17 @@
   }
   [class~="react-select__placeholder"],
   [class~="react-select__single-value"],
-  [class~="react-select__indicator"] {
+  [class~="react-select__dropdown-indicator"] {
     color: var(--text) !important;
+  }
+}
+
+.optionSelected {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  > svg {
+    width: 14px;
+    height: 14px;
   }
 }
