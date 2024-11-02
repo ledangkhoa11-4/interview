@@ -28,7 +28,7 @@ const Product: React.FC<ProductProps> = memo((props: ProductProps) => {
       <p className={classes.description}>{product?.description ?? "N/A"}</p>
       <p className={classes.price}>{product?.price ? currencyService.formatPrice(product?.price) : "N/A"}</p>
       <div className={classes.rating}>
-        <Rating value={product?.rating?.rate} readOnly size="small" />
+        <Rating value={product?.rating?.rate} precision={0.5} readOnly size="small" />
         <span className={classes.count}>{`(${product?.rating?.count})`}</span>
       </div>
       <div className={classes.addToCartButton}>

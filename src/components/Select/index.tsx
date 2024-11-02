@@ -3,6 +3,7 @@ import classes from "./styles.module.scss";
 import ReactSelect, { components, CSSObjectWithLabel, GroupBase, MultiValueProps, OptionProps, SingleValueProps, StylesConfig } from "react-select";
 import clsx from "clsx";
 import { CheckIcon } from "assets";
+import { Control, Controller } from "react-hook-form";
 
 const styles = (): StylesConfig<any, boolean, GroupBase<unknown>> => ({
   indicatorSeparator: () =>
@@ -29,7 +30,7 @@ const styles = (): StylesConfig<any, boolean, GroupBase<unknown>> => ({
       borderRadius: 16,
       boxShadow: "none",
       background: state.hasValue || state.isFocused ? "var(--filterBackgroundActive)" : "var(--filterBackground)",
-      border: '1px solid var(--darkGray)',
+      border: "1px solid var(--darkGray)",
       "&:hover": {
         background: "var(--filterBackgroundActive)",
         ".react-select__placeholder": {
@@ -144,6 +145,8 @@ const styles = (): StylesConfig<any, boolean, GroupBase<unknown>> => ({
 });
 
 interface SelectProps {
+  control: Control<any>;
+  name: string;
   className?: string;
   label?: string;
   isMulti?: boolean;
@@ -154,7 +157,7 @@ interface SelectProps {
 }
 
 const Select: React.FC<SelectProps> = memo((props: SelectProps) => {
-  const { className, label, isMulti, active, bindValue, bindLabel, ...rest } = props;
+  const { control, name, className, label, isMulti, active, bindValue, bindLabel, ...rest } = props;
 
   const SingleValue = ({ children, ...props }: SingleValueProps) => (
     <components.SingleValue {...props}>{label ? `${label} ${children}` : children}</components.SingleValue>
@@ -184,23 +187,30 @@ const Select: React.FC<SelectProps> = memo((props: SelectProps) => {
   };
 
   return (
-    <ReactSelect
-      className={clsx(className, { [classes.active]: active })}
-      classNamePrefix="react-select"
-      isSearchable={false}
-      isClearable={true}
-      closeMenuOnSelect={!isMulti}
-      hideSelectedOptions={false}
-      blurInputOnSelect={false}
-      backspaceRemovesValue={false}
-      styles={styles()}
-      isMulti={isMulti}
-      menuPortalTarget={document.querySelector("body")}
-      getOptionValue={(option: any) => option?.[bindValue || "value"]}
-      getOptionLabel={(option: any) => option?.[bindLabel || "label"]}
-      noOptionsMessage={() => "No results found"}
-      components={{ SingleValue, Option, MultiValue }}
-      {...rest}
+    <Controller
+      name={name}
+      control={control}
+      render={({ field }) => (
+        <ReactSelect
+          {...field}
+          className={clsx(className, { [classes.active]: active })}
+          classNamePrefix="react-select"
+          isSearchable={false}
+          isClearable={true}
+          closeMenuOnSelect={!isMulti}
+          hideSelectedOptions={false}
+          blurInputOnSelect={false}
+          backspaceRemovesValue={false}
+          styles={styles()}
+          isMulti={isMulti}
+          menuPortalTarget={document.querySelector("body")}
+          getOptionValue={(option: any) => option?.[bindValue || "value"]}
+          getOptionLabel={(option: any) => option?.[bindLabel || "label"]}
+          noOptionsMessage={() => "No results found"}
+          components={{ SingleValue, Option, MultiValue }}
+          {...rest}
+        />
+      )}
     />
   );
 });

@@ -10,3 +10,4 @@ export { ReactComponent as ArrowDown } from './icons/arrow_down.svg';
 
 // Images
 export { default as MediaThumbnailPlaceholderImage } from './images/media-thumbnail-placeholder.png';
+export { default as NoProductFound } from './images/no-product-found.png';
