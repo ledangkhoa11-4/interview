@@ -15,7 +15,7 @@ const Product: React.FC<ProductProps> = memo((props: ProductProps) => {
   return (
     <Card className={classes.productContainer}>
       <div className={classes.imageContainer}>
-        <img src={product?.image ?? MediaThumbnailPlaceholderImage} alt={product?.title} />
+        <img rel="preload" src={product?.image ?? MediaThumbnailPlaceholderImage} alt={product?.title} />
       </div>
       <Chip
         className={classes.category}

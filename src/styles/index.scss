@@ -1,5 +1,3 @@
-@use "./fonts.scss" as *;
-
 :root {
   // COLORS
   --primary: #e1e9ff;
@@ -36,6 +34,7 @@ body {
   font-family: "Roboto", sans-serif;
   color: var(--text);
   background-color: var(--background);
+  overflow: scroll;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   .cursor-pointer {

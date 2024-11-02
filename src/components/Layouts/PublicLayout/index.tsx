@@ -2,7 +2,6 @@ import Header from "components/Header";
 import classes from "./styles.module.scss";
 import Footer from "components/Footer";
 import { memo, useEffect } from "react";
-import { Container } from "@mui/material";
 import { Outlet } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "appRedux/hook";
 import { getProductsRequest } from "appRedux/reducers/products/actionTypes";
@@ -18,7 +17,7 @@ const PublicLayout: React.FC<PublicLayoutProps> = memo((props: PublicLayoutProps
 
   useEffect(() => {
     if (!products.isLoading && !products.data) {
-      dispatch(getProductsRequest());
+      dispatch(getProductsRequest(products));
     }
   }, [products]);
 
@@ -31,10 +30,9 @@ const PublicLayout: React.FC<PublicLayoutProps> = memo((props: PublicLayoutProps
   return (
     <div className={classes.publicLayout}>
       <Header />
-
-      <Container className={classes.container}>
+      <div className={classes.container}>
         <Outlet />
-      </Container>
+      </div>
 
       <Footer />
     </div>

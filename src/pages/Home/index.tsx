@@ -1,5 +1,5 @@
 import { IRootState } from "appRedux/reducers";
-import { Fragment, memo, useMemo, useState } from "react";
+import { Fragment, memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import classes from "./styles.module.scss";
 import Select from "components/Select";
@@ -7,8 +7,14 @@ import Product from "components/Product";
 import { Button, Menu, Rating, Skeleton, Slider } from "@mui/material";
 import clsx from "clsx";
 import currencyService from "services/currencyService";
+import { ArrowDown, ClearIcon } from "assets";
+import { AutoSizer, WindowScroller, Grid, GridCellRenderer } from "react-virtualized";
+import useWindowDimensions from "hooks/useWindowDimensions";
+import { useAppDispatch } from "appRedux/hook";
+import { getProductsRequest } from "appRedux/reducers/products/actionTypes";
 
-const SKELETON_COUNT = 5;
+const SKELETON_COUNT = 3;
+const COLUMN_COUNT = 3;
 
 const MOCK_PRICE_RANGE = {
   min: 0,
@@ -18,21 +24,61 @@ const MOCK_PRICE_RANGE = {
 interface HomePageProps {}
 
 const HomePage: React.FC<HomePageProps> = memo((props: HomePageProps) => {
-  const products = useSelector((state: IRootState) => state.products);
+  const dispatch = useAppDispatch();
 
+  const windowSize = useWindowDimensions();
+
+  const products = useSelector((state: IRootState) => state.products);
   const categories = useSelector((state: IRootState) => state.categories);
 
+  const gridRef = useRef<Grid>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const scrollingObserver = useRef<IntersectionObserver>(null);
+
   const [priceMenuAnchorEl, setPriceMenuAnchorEl] = useState<null | HTMLElement>(null);
-
   const [ratingMenuAnchorEl, setRatingMenuAnchorEl] = useState<null | HTMLElement>(null);
-
   const [prices, setPrices] = useState<[number, number]>([MOCK_PRICE_RANGE.min, MOCK_PRICE_RANGE.max]);
-
   const [rating, setRating] = useState<number | null>(0);
 
   const isFilterPrice = useMemo(() => prices[0] !== MOCK_PRICE_RANGE.min || prices[1] !== MOCK_PRICE_RANGE.max, [prices]);
-
   const isFilterRating = useMemo(() => rating > 0, [rating]);
+  const containerWidth = useMemo(() => containerRef?.current?.clientWidth, [containerRef, windowSize]);
+
+  useEffect(() => {
+    gridRef.current?.recomputeGridSize();
+  }, [windowSize]);
+
+  const lastPostElementRef = useCallback(
+    (node) => {
+      if (products?.isLoading || !products?.meta?.hasMore) return; // Stop observing if loading or no more posts
+      if (scrollingObserver.current) scrollingObserver.current.disconnect();
+      scrollingObserver.current = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting) {
+          dispatch(getProductsRequest({ ...products, meta: { ...products.meta, page: products.meta.page + 1 } }));
+        }
+      });
+
+      if (node) scrollingObserver.current.observe(node);
+    },
+    [products, scrollingObserver]
+  );
+
+  const gridCellRenderer: GridCellRenderer = useCallback(
+    ({ columnIndex, key, rowIndex, style }) => {
+      const columnCount = Math.max(1, Math.min(COLUMN_COUNT, Math.floor(containerWidth / 400)));
+      const productIndex = rowIndex * columnCount + columnIndex;
+      return (
+        <Fragment key={key}>
+          {productIndex >= products.data.length ? null : (
+            <div key={key} style={style} ref={products.data.length === productIndex + 1 ? lastPostElementRef : null}>
+              <Product product={products.data[productIndex]} />
+            </div>
+          )}
+        </Fragment>
+      );
+    },
+    [products, containerWidth]
+  );
 
   const handleOpenPriceMenu = (event: React.MouseEvent<HTMLButtonElement>) => {
     setPriceMenuAnchorEl(event.currentTarget);
@@ -49,6 +95,16 @@ const HomePage: React.FC<HomePageProps> = memo((props: HomePageProps) => {
 
   const handleChangePrice = (event: Event, newValue: number | number[]) => {
     setPrices(newValue as [number, number]);
+  };
+
+  const onClearPriceFilter = (e: React.MouseEvent<HTMLOrSVGElement>) => {
+    e.stopPropagation();
+    setPrices([MOCK_PRICE_RANGE.min, MOCK_PRICE_RANGE.max]);
+  };
+
+  const onClearRatingFilter = (e: React.MouseEvent<HTMLOrSVGElement>) => {
+    e.stopPropagation();
+    setRating(0);
   };
 
   return (
@@ -90,7 +146,11 @@ const HomePage: React.FC<HomePageProps> = memo((props: HomePageProps) => {
           disableTouchRipple
           onClick={handleOpenPriceMenu}
         >
-          {isFilterPrice ? "Price *" : "Price"}
+          <span> {isFilterPrice ? "Price*" : "Price"}</span>
+          <div className={classes.action}>
+            {isFilterPrice ? <ClearIcon onClick={onClearPriceFilter} /> : null}
+            <ArrowDown />
+          </div>
         </Button>
 
         <Button
@@ -103,16 +163,61 @@ const HomePage: React.FC<HomePageProps> = memo((props: HomePageProps) => {
           disableTouchRipple
           onClick={handleOpenRatingMenu}
         >
-          {isFilterRating ? "Rating *" : "Rating"}
+          <span>{isFilterRating ? "Rating*" : "Rating"}</span>
+          <div className={classes.action}>
+            {isFilterRating ? <ClearIcon onClick={onClearRatingFilter} /> : null}
+            <ArrowDown />
+          </div>
         </Button>
       </div>
 
-      <div className={classes.productList}>
-        {!products?.isLoading
-          ? products?.data?.map((product) => <Product key={product.id} product={product} />)
-          : Array.from({ length: SKELETON_COUNT }, (_, i) => (
-              <Skeleton key={`skeleton-${i}`} variant="rectangular" width={360} height={537} style={{ borderRadius: 8 }} />
-            ))}
+      <div className={classes.productList} ref={containerRef}>
+        {!products.isLoading || (products.isLoading && products.data?.length) ? (
+          <>
+            <WindowScroller>
+              {({ height, scrollTop, isScrolling, onChildScroll }) => (
+                <AutoSizer disableHeight>
+                  {({ width }) => {
+                    const columnCount = Math.max(1, Math.min(COLUMN_COUNT, Math.floor(containerWidth / 400)));
+                    return (
+                      <Grid
+                        ref={gridRef}
+                        autoHeight
+                        height={height}
+                        cellRenderer={gridCellRenderer}
+                        columnWidth={400}
+                        rowHeight={537}
+                        enableFixedColumnScroll
+                        enableFixedRowScroll
+                        scrollTop={scrollTop}
+                        columnCount={columnCount}
+                        rowCount={Math.ceil(products?.data?.length / columnCount)}
+                        width={width}
+                        overscanRowCount={0}
+                        onScroll={onChildScroll}
+                        isScrolling={isScrolling}
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                        }}
+                      />
+                    );
+                  }}
+                </AutoSizer>
+              )}
+            </WindowScroller>
+            {products.isLoading
+              ? Array.from({ length: SKELETON_COUNT }, (_, i) => (
+                  <Skeleton key={`skeleton-${i}`} variant="rectangular" width={360} height={513} style={{ borderRadius: 8 }} />
+                ))
+              : null}
+          </>
+        ) : (
+          Array.from({ length: SKELETON_COUNT }, (_, i) => (
+            <Skeleton key={`skeleton-${i}`} variant="rectangular" width={360} height={513} style={{ borderRadius: 8 }} />
+          ))
+        )}
       </div>
 
       <Menu
@@ -120,6 +225,7 @@ const HomePage: React.FC<HomePageProps> = memo((props: HomePageProps) => {
         anchorEl={priceMenuAnchorEl}
         open={!!priceMenuAnchorEl}
         onClose={handleClose}
+        disableScrollLock={true}
         MenuListProps={{
           "aria-labelledby": "basic-button",
         }}
@@ -143,6 +249,7 @@ const HomePage: React.FC<HomePageProps> = memo((props: HomePageProps) => {
         anchorEl={ratingMenuAnchorEl}
         open={!!ratingMenuAnchorEl}
         onClose={handleClose}
+        disableScrollLock={true}
         MenuListProps={{
           "aria-labelledby": "basic-button",
         }}

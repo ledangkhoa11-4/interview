@@ -4,8 +4,8 @@
   flex-direction: column;
   .container {
     flex: 1;
-    margin-top: var(--headerHeight);
     padding-top: 48px;
     padding-bottom: 48px;
+    margin: var(--headerHeight) 24px 0;
   }
 }
