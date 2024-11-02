@@ -7,5 +7,11 @@
     padding-top: 48px;
     padding-bottom: 48px;
     margin: var(--headerHeight) 24px 0;
+
+    @media only screen and (max-width: 768px) {
+      padding-top: 24px;
+      padding-bottom: 24px;
+      margin: var(--headerHeight) 16px 0;
+    }
   }
 }

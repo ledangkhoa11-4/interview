@@ -4,6 +4,10 @@ import { Button, Card, Chip, Rating } from "@mui/material";
 import { IProduct } from "interfaces/products";
 import { AddToCart, MediaThumbnailPlaceholderImage } from "assets";
 import currencyService from "services/currencyService";
+import { useAppDispatch } from "appRedux/hook";
+import { addProductToCartReducer } from "appRedux/reducers/cart";
+import useDebounce from "hooks/useDebounce";
+import toastService from "services/toastService";
 
 interface ProductProps {
   product: IProduct;
@@ -11,6 +15,13 @@ interface ProductProps {
 
 const Product: React.FC<ProductProps> = memo((props: ProductProps) => {
   const { product } = props;
+
+  const dispatch = useAppDispatch();
+
+  const handleAddProductToCart = useDebounce(() => {
+    dispatch(addProductToCartReducer({ product, quantity: 1 }));
+    toastService.success("Product added to cart");
+  }, 200);
 
   return (
     <Card className={classes.productContainer}>
@@ -32,8 +43,8 @@ const Product: React.FC<ProductProps> = memo((props: ProductProps) => {
         <span className={classes.count}>{`(${product?.rating?.count})`}</span>
       </div>
       <div className={classes.addToCartButton}>
-        <Button variant="contained">
-          <AddToCart style={{fill: "var(--white)"}} />
+        <Button variant="contained" onClick={handleAddProductToCart}>
+          <AddToCart style={{ fill: "var(--white)" }} />
           <span>Add to cart</span>
         </Button>
       </div>

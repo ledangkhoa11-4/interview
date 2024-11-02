@@ -4,4 +4,7 @@
       background-color: var(--buttonBackground-hover);
     }
   }
+  [class~="MuiBadge-badge"] {
+    background: var(--orange);
+  }
 }

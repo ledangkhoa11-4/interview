@@ -6,6 +6,8 @@ import { Outlet } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "appRedux/hook";
 import { getProductsRequest } from "appRedux/reducers/products/actionTypes";
 import { getCategoriesRequest } from "appRedux/reducers/categories/actionTypes";
+import { setCartReducer } from "appRedux/reducers/cart";
+import cartService from "services/cartService";
 
 interface PublicLayoutProps {}
 
@@ -14,6 +16,7 @@ const PublicLayout: React.FC<PublicLayoutProps> = memo((props: PublicLayoutProps
 
   const products = useAppSelector((state) => state.products);
   const categories = useAppSelector((state) => state.categories);
+  const cart = useAppSelector((state) => state.cart);
 
   useEffect(() => {
     if (!products.isLoading && !products.data) {
@@ -26,6 +29,12 @@ const PublicLayout: React.FC<PublicLayoutProps> = memo((props: PublicLayoutProps
       dispatch(getCategoriesRequest());
     }
   }, [categories]);
+
+  useEffect(() => {
+    if (!cart.data) {
+      dispatch(setCartReducer(cartService.getCart()));
+    }
+  }, [cart]);
 
   return (
     <div className={classes.publicLayout}>

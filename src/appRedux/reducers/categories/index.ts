@@ -15,13 +15,13 @@ const categorySlice = createSlice({
   name: "categories",
   initialState,
   reducers: {
-    setCategories(state: ICategoryState, action: PayloadAction<ICategoryState>) {
+    setCategoriesReducer(state: ICategoryState, action: PayloadAction<ICategoryState>) {
       state.isLoading = action.payload.isLoading;
       state.data = action.payload.data;
     },
   },
 });
 
-export const { setCategories } = categorySlice.actions;
+export const { setCategoriesReducer } = categorySlice.actions;
 
 export default categorySlice.reducer;

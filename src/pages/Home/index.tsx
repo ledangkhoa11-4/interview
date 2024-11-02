@@ -27,7 +27,7 @@ const HomePage: React.FC<HomePageProps> = memo((props: HomePageProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const scrollingObserver = useRef<IntersectionObserver>(null);
 
-  const containerWidth = useMemo(() => containerRef?.current?.clientWidth, [containerRef, windowSize]);
+  const containerWidth = useMemo(() => containerRef?.current?.clientWidth ?? 0, [containerRef, windowSize]);
 
   useEffect(() => {
     gridRef.current?.recomputeGridSize();
@@ -85,8 +85,8 @@ const HomePage: React.FC<HomePageProps> = memo((props: HomePageProps) => {
                             autoHeight
                             height={height}
                             cellRenderer={gridCellRenderer}
-                            columnWidth={400}
-                            rowHeight={537}
+                            columnWidth={Math.min(400,containerWidth)}
+                            rowHeight={containerWidth <= 720 ? 460 : 537}
                             enableFixedColumnScroll
                             enableFixedRowScroll
                             scrollTop={scrollTop}

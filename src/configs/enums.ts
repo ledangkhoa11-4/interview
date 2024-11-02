@@ -5,3 +5,10 @@ export enum ESortType {
   PRICE_ASC = "price-asc",
   PRICE_DESC = "price-desc",
 }
+
+export enum EToastStatus {
+  Info,
+  Error,
+  Success,
+  Warning,
+}
