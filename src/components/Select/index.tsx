@@ -26,10 +26,10 @@ const styles = (): StylesConfig<any, boolean, GroupBase<unknown>> => ({
       cursor: "pointer",
       width: "fit-content",
       maxWidth: 250,
-      border: "none",
       borderRadius: 16,
       boxShadow: "none",
       background: state.hasValue || state.isFocused ? "var(--filterBackgroundActive)" : "var(--filterBackground)",
+      border: '1px solid var(--darkGray)',
       "&:hover": {
         background: "var(--filterBackgroundActive)",
         ".react-select__placeholder": {

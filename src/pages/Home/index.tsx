@@ -56,6 +56,8 @@ const HomePage: React.FC<HomePageProps> = memo((props: HomePageProps) => {
       <div className={classes.dataControlContainer}>
         <Select
           label="Sort by:"
+          aria-labelledby="sortBy"
+          aria-label="sortBy"
           placeholder="Sort by"
           options={[
             { value: "1", label: "Name A-Z" },
@@ -67,7 +69,13 @@ const HomePage: React.FC<HomePageProps> = memo((props: HomePageProps) => {
           ]}
         />
         {!categories?.isLoading ? (
-          <Select placeholder="Category" isMulti options={categories?.data?.map((category) => ({ value: category.title, label: category.title }))} />
+          <Select
+            placeholder="Category"
+            aria-labelledby="filterByCategory"
+            aria-label="filterByCategory"
+            isMulti
+            options={categories?.data?.map((category) => ({ value: category.title, label: category.title }))}
+          />
         ) : (
           <Skeleton variant="rectangular" width={117} height={38} style={{ borderRadius: 16 }} />
         )}

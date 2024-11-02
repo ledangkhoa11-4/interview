@@ -12,7 +12,7 @@ const Header: React.FC<HeaderProps> = memo((props: HeaderProps) => {
   return (
     <div className={classes.header}>
       <Container className={classes.container} maxWidth={false}>
-        <Link to={appRoutes.public.home}>
+        <Link to={appRoutes.public.home} aria-label="KVY Technology">
           <DefaultLogo />
         </Link>
         
