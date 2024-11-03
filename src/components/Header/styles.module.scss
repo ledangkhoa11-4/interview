@@ -9,6 +9,21 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    .leftSide {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+
+      p {
+        font-size: 20px;
+        font-weight: 500;
+        color: var(--darkBlue);
+      }
+      [class~="MuiDivider-root"] {
+        border-color: var(--darkBlue);
+        border-right-width: medium;
+      }
+    }
     .logo {
       @media only screen and (max-width: 768px) {
         width: 80px;

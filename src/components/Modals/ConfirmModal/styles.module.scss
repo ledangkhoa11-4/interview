@@ -1,0 +1,29 @@
+.container {
+  z-index: 10000;
+
+  [class~='MuiPaper-root'] {
+    border-radius: 12px;
+    color: var(--black);
+    background: var(--white);
+    width: 100%;
+  }
+  [class~='MuiTypography-root'] {
+    padding: 24px;
+  }
+  [class~='MuiDialogContent-root'] {
+    padding-bottom: 0;
+  }
+  [class~='MuiDialogActions-root'] {
+    padding: 0 24px 24px;
+    gap: 12px 24px;
+    > button {
+      margin: 0;
+    }
+  }
+  .title {
+    font-weight: 600;
+  }
+  .description {
+    margin-bottom: 24px;
+  }
+}

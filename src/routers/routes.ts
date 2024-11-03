@@ -1,6 +1,7 @@
 const appRoutes = {
   public: {
     home: '/',
+    cart:  '/cart',
   },
 };
 

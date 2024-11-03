@@ -2,6 +2,7 @@ import { forwardRef, memo } from "react";
 import { OutlinedInput as MuiInput, InputProps as MuiInputProps } from "@mui/material";
 import classes from "./styles.module.scss";
 import { UseFormRegisterReturn } from "react-hook-form";
+import clsx from "clsx";
 
 interface InputProps extends MuiInputProps {
   className?: string;
@@ -11,13 +12,13 @@ interface InputProps extends MuiInputProps {
 
 const Input: React.FC<InputProps & { ref?: React.Ref<HTMLInputElement> }> = memo(
   forwardRef((props: InputProps, ref: any) => {
-    const { className, label, subLabel, textFieldRef, errorMessage, type, isOptional, ...rest } = props;
+    const { className, textFieldRef, errorMessage, type, ...rest } = props;
 
     const { ref: formRef, ...inputProps } = textFieldRef || { ref: null };
 
     return (
-      <div className={classes.container}>
-        <MuiInput {...inputProps} key={textFieldRef?.name} inputRef={formRef ?? ref} {...rest} size="small" />
+      <div className={clsx(classes.container, className)}>
+        <MuiInput {...inputProps} key={textFieldRef?.name} inputRef={formRef ?? ref} type={type} size="small" {...rest} />
       </div>
     );
   })

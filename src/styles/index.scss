@@ -1,6 +1,7 @@
 :root {
   // COLORS
   --primary: #e1e9ff;
+  --darkBlue: #0313b0;
   --secondary: #e45858;
   --black: #2b2c34;
   --white: #fffffe;
@@ -29,12 +30,10 @@ html,
 body {
   margin: 0;
   padding: 0 !important;
-  overflow-x: hidden !important;
   font-size: 16px;
   font-family: "Roboto", sans-serif;
   color: var(--text);
   background-color: var(--background);
-  overflow: scroll;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   .cursor-pointer {

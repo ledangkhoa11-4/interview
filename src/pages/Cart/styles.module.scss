@@ -1,0 +1,83 @@
+.cartTable {
+  .tableHead {
+    th {
+      font-weight: 600;
+    }
+  }
+  .product {
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    gap: 16px;
+    img {
+      width: 80px;
+      height: 80px;
+      object-fit: contain;
+    }
+    .productDesc {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      > p,
+      > span {
+        text-align: left;
+        display: -webkit-box;
+        -webkit-line-clamp: 1;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      > p {
+        -webkit-line-clamp: 2;
+        font-size: 14px;
+        font-weight: 600;
+        margin-bottom: 4px;
+      }
+      > span {
+        font-size: 12px;
+        color: var(--darkGray);
+      }
+    }
+  }
+  .quantityInput {
+    input {
+      text-align: center !important;
+      font-size: 16px;
+      padding: 8px 8px 8px 16px;
+    }
+  }
+  .price {
+    p {
+      font-size: 16px;
+      font-weight: 600;
+    }
+  }
+  .noItemFound {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    a {
+      color: var(--darkGray);
+      font-size: 20px;
+      font-weight: 600;
+    }
+  }
+}
+
+.totalPrice {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24px;
+  box-shadow:
+    0px 2px 1px -1px rgba(0, 0, 0, 0.2),
+    0px 1px 1px 0px rgba(0, 0, 0, 0.14),
+    0px 1px 3px 0px rgba(0, 0, 0, 0.12);
+  margin-top: 16px;
+  font-size: 18px;
+  font-weight: 600;
+  position: sticky;
+  bottom: 1px;
+  background: var(--white);
+}
