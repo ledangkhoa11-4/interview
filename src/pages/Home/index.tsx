@@ -53,7 +53,7 @@ const HomePage: React.FC<HomePageProps> = memo((props: HomePageProps) => {
     ({ columnIndex, key, rowIndex, style }) => {
       const columnCount = Math.max(1, Math.min(COLUMN_COUNT, Math.floor(containerWidth / ITEM_WIDTH)));
       const productIndex = rowIndex * columnCount + columnIndex;
-      
+
       if (productIndex >= products.data.length) return null;
       return (
         <div key={key} style={style} ref={products.data.length === productIndex + 1 ? lastPostElementRef : null}>
@@ -113,13 +113,13 @@ const HomePage: React.FC<HomePageProps> = memo((props: HomePageProps) => {
 
             {products.isLoading
               ? Array.from({ length: SKELETON_COUNT }, (_, i) => (
-                  <Skeleton key={`skeleton-${i}`} variant="rectangular" width={384} height={513} style={{ borderRadius: 8, margin: "0 auto" }} />
+                  <Skeleton key={`skeleton-${i}`} variant="rectangular" width={360} height={513} style={{ borderRadius: 8 }} />
                 ))
               : null}
           </Fragment>
         ) : (
           Array.from({ length: SKELETON_COUNT }, (_, i) => (
-            <Skeleton key={`skeleton-${i}`} variant="rectangular" width={384} height={513} style={{ borderRadius: 8 , margin: "0 auto" }} />
+            <Skeleton key={`skeleton-${i}`} variant="rectangular" width={360} height={513} style={{ borderRadius: 8 }} />
           ))
         )}
       </div>
