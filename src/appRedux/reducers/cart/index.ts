@@ -18,7 +18,7 @@ const cartSlice = createSlice({
       if (productIndex >= 0) {
         state.data[productIndex].quantity += action.payload.quantity;
       } else {
-        state.data.push(action.payload);
+        state.data.unshift(action.payload);
       }
       localStorage.setItem("cart", JSON.stringify(state.data));
     },
