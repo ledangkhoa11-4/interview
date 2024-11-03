@@ -205,7 +205,15 @@ const DataControl: React.FC<DataControlProps> = memo((props: DataControlProps) =
       </Button>
 
       <div className={classes.searchContainer}>
-        <Input placeholder="Search ..." textFieldRef={register("name")} />
+        <Input
+          placeholder="Search ..."
+          textFieldRef={register("name")}
+          onKeyDown={(event: React.KeyboardEvent<HTMLInputElement>) => {
+            if (event?.key === "Enter") {
+              onSearchProduct();
+            }
+          }}
+        />
         <IconButton className={classes.searchButton} onClick={onSearchProduct}>
           <SearchIcon />
         </IconButton>
