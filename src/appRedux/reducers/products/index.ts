@@ -1,6 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { MOCK_PRICE_RANGE } from "components/DataControl";
 import { IProduct, IProductFilters } from "interfaces/products";
+import { isMobile } from 'react-device-detect';
 
 export interface IProductState {
   isLoading: boolean;
@@ -20,7 +21,7 @@ const initialState: IProductState = {
   data: null,
   meta: {
     page: 1,
-    limit: 9,
+    limit: isMobile ? 3 : 9,
     hasMore: null,
   },
   sortFilterCriteria: {

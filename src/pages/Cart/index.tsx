@@ -1,4 +1,4 @@
-import React, { memo, useMemo, useState } from "react";
+import React, { memo, useMemo, useRef, useState } from "react";
 import classes from "./styles.module.scss";
 import { Box, Button, IconButton, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material";
 import { useAppDispatch, useAppSelector } from "appRedux/hook";
@@ -11,6 +11,7 @@ import { IConfirmModal } from "interfaces/common";
 import ConfirmModal from "components/Modals/ConfirmModal";
 import appRoutes from "routers/routes";
 import { Link } from "react-router-dom";
+import useWindowDimensions from "hooks/useWindowDimensions";
 
 const MAX_QUANTITY_PRODUCT = 99;
 
@@ -20,6 +21,12 @@ const CartPage: React.FC<CartPageProps> = memo((props: CartPageProps) => {
   const dispatch = useAppDispatch();
 
   const cart = useAppSelector((state) => state.cart);
+
+  const windowSize = useWindowDimensions();
+
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  const isMobile = useMemo(() => (containerRef?.current?.clientWidth ?? 0) <= 768, [containerRef, windowSize]);
 
   const totalPrice = useMemo(() => (cart.data?.length ? cart.data.reduce((acc, cur) => acc + cur.product.price * cur.quantity, 0) : 0), [cart]);
   const totalProduct = useMemo(() => cart.data?.length ?? 0, [cart]);
@@ -54,7 +61,7 @@ const CartPage: React.FC<CartPageProps> = memo((props: CartPageProps) => {
 
   return (
     <>
-      <div className={classes.container}>
+      <div className={classes.container} ref={containerRef}>
         <TableContainer component={Paper} className={classes.cartTable}>
           <Table>
             <TableHead className={classes.tableHead}>
@@ -62,18 +69,20 @@ const CartPage: React.FC<CartPageProps> = memo((props: CartPageProps) => {
                 <TableCell align="center" width={"30%"}>
                   Product
                 </TableCell>
-                <TableCell align="center" width={"15%"} style={{minWidth: "150px"}}>
+                <TableCell align="center" width={"15%"} style={{ minWidth: "80px" }}>
                   Quantity
                 </TableCell>
-                <TableCell align="center" width={"10%"} style={{minWidth: "80px"}} >
-                  Price
-                </TableCell>
-                <TableCell align="center" width={"10%"} style={{minWidth: "80px"}}>
-                  Total
-                </TableCell>
-                <TableCell align="center" width={"5%"}>
-                  Action
-                </TableCell>
+                {isMobile ? null : (
+                  <>
+                    <TableCell align="center" width={"10%"} style={{ minWidth: "80px" }}>
+                      Price
+                    </TableCell>
+                    <TableCell align="center" width={"10%"} style={{ minWidth: "80px" }}>
+                      Total
+                    </TableCell>
+                  </>
+                )}
+                <TableCell align="center" width={"1%"}/>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -86,7 +95,15 @@ const CartPage: React.FC<CartPageProps> = memo((props: CartPageProps) => {
                           <img rel="preload" src={cartItem.product?.image ?? MediaThumbnailPlaceholderImage} alt={cartItem.product?.title} />
                           <div className={classes.productDesc}>
                             <p>{cartItem.product?.title}</p>
-                            <span title={cartItem.product?.description}>{cartItem.product?.description}</span>
+
+                            {isMobile ? (
+                              <>
+                                <span title={cartItem.product?.description}>{currencyService.formatPrice(cartItem.product.price)}</span>
+                                <p>Total: {currencyService.formatPrice(cartItem.product.price * cartItem.quantity)}</p>
+                              </>
+                            ) : (
+                              <span title={cartItem.product?.description}>{cartItem.product?.description}</span>
+                            )}
                           </div>
                         </div>
                       </TableCell>
@@ -120,12 +137,16 @@ const CartPage: React.FC<CartPageProps> = memo((props: CartPageProps) => {
                           </IconButton>
                         </div>
                       </TableCell>
-                      <TableCell align="center" component="th" scope="row" className={classes.price}>
-                        <p>{currencyService.formatPrice(cartItem.product.price)}</p>
-                      </TableCell>
-                      <TableCell align="center" component="th" scope="row" className={classes.price}>
-                        <p>{currencyService.formatPrice(cartItem.product.price * cartItem.quantity)}</p>
-                      </TableCell>
+                      {isMobile ? null : (
+                        <>
+                          <TableCell align="center" component="th" scope="row" className={classes.price}>
+                            <p>{currencyService.formatPrice(cartItem.product.price)}</p>
+                          </TableCell>
+                          <TableCell align="center" component="th" scope="row" className={classes.price}>
+                            <p>{currencyService.formatPrice(cartItem.product.price * cartItem.quantity)}</p>
+                          </TableCell>
+                        </>
+                      )}
                       <TableCell align="center" component="th" scope="row" className={classes.price}>
                         <IconButton
                           onClick={() => {

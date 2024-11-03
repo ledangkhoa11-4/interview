@@ -13,6 +13,10 @@
       width: 80px;
       height: 80px;
       object-fit: contain;
+      @media only screen and (max-width: 768px) {
+        width: 60px;
+        height: 60px;
+      }
     }
     .productDesc {
       display: flex;
@@ -58,12 +62,27 @@
     }
     .quantityContainer {
       display: flex;
-      gap: 4px;
+      align-items: center;
+      gap: 6px;
       svg {
         width: 18px;
       }
       button {
         width: 40px;
+      }
+      @media only screen and (max-width: 768px) {
+        svg {
+          width: 12px;
+        }
+        button {
+          width: 20px;
+          height: 20px;
+          padding: 0;
+          background: none !important;
+        }
+        input {
+          padding: 4px;
+        }
       }
     }
   }
@@ -82,6 +101,11 @@
       color: var(--darkGray);
       font-size: 20px;
       font-weight: 600;
+    }
+  }
+  @media only screen and (max-width: 768px) {
+    [class~="MuiTableCell-root"] {
+      padding: 10px !important;
     }
   }
 }
@@ -104,6 +128,7 @@
   bottom: 1px;
   background: var(--white);
   @media only screen and (max-width: 768px) {
+    font-size: 16px;
     button {
       width: 100%;
     }
