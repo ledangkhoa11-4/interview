@@ -37,16 +37,22 @@ function* getProductsRequest(action: PayloadAction<IProductState>) {
       })
     );
 
+    const name = action.payload.sortFilterCriteria.name;
     const categories = action.payload.sortFilterCriteria.categories;
     const prices = action.payload.sortFilterCriteria.prices;
     const rating = action.payload.sortFilterCriteria.rating;
-    const fetchAll = action.payload.sortFilterCriteria.sortBy !== null || categories?.length || prices || rating; // Fetch all products to sort
+    const fetchAll = action.payload.sortFilterCriteria.sortBy !== null || categories?.length || prices || rating || name; // Fetch all products to sort
 
     const meta = { ...action.payload.meta };
     const take = meta.limit * meta.page;
     let products = yield call(apiService.GET, `${apiRoutes.products.default}${!fetchAll ? `?limit=${take}` : ""}`);
 
     // Stimulate sorting and filtering
+    if (name) {
+      products = products.filter(
+        (product) => product.title.toLowerCase().includes(name.toLowerCase()) || product.description.toLowerCase().includes(name.toLowerCase())
+      );
+    }
     if (action.payload.sortFilterCriteria.sortBy) {
       products = sortProducts(products, action.payload.sortFilterCriteria.sortBy.value as ESortType);
     }

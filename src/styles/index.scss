@@ -65,4 +65,7 @@ body {
   a {
     color: var(--primary);
   }
+  @media only screen and (max-width: 768px) {
+    --headerHeight: 60px
+  }
 }

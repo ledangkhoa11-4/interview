@@ -2,7 +2,7 @@ import { memo } from "react";
 import classes from "./styles.module.scss";
 import { Button, Card, Chip, Rating } from "@mui/material";
 import { IProduct } from "interfaces/products";
-import { AddToCart, MediaThumbnailPlaceholderImage } from "assets";
+import { AddToCartIcon, MediaThumbnailPlaceholderImage } from "assets";
 import currencyService from "services/currencyService";
 import { useAppDispatch } from "appRedux/hook";
 import { addProductToCartReducer } from "appRedux/reducers/cart";
@@ -44,7 +44,7 @@ const Product: React.FC<ProductProps> = memo((props: ProductProps) => {
       </div>
       <div className={classes.addToCartButton}>
         <Button variant="contained" onClick={handleAddProductToCart}>
-          <AddToCart style={{ fill: "var(--white)" }} />
+          <AddToCartIcon style={{ fill: "var(--white)" }} />
           <span>Add to cart</span>
         </Button>
       </div>

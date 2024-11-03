@@ -1,7 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { MOCK_PRICE_RANGE } from "components/DataControl";
-import { ISelectOption } from "interfaces/common";
-import { IProduct } from "interfaces/products";
+import { IProduct, IProductFilters } from "interfaces/products";
 
 export interface IProductState {
   isLoading: boolean;
@@ -12,12 +11,7 @@ export interface IProductState {
     limit: number;
     hasMore: boolean;
   };
-  sortFilterCriteria: {
-    sortBy?: ISelectOption;
-    categories?: ISelectOption[];
-    prices: number[];
-    rating: number;
-  };
+  sortFilterCriteria: IProductFilters;
 }
 
 const initialState: IProductState = {
@@ -30,6 +24,7 @@ const initialState: IProductState = {
     hasMore: null,
   },
   sortFilterCriteria: {
+    name: "",
     sortBy: null,
     categories: [],
     prices: [MOCK_PRICE_RANGE.min, MOCK_PRICE_RANGE.max],

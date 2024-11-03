@@ -3,9 +3,9 @@ import classes from "./styles.module.scss";
 import Select from "components/Select";
 import { useSelector } from "react-redux";
 import { IRootState } from "appRedux/reducers";
-import { ArrowDown, ClearIcon } from "assets";
+import { ArrowDownIcon, ClearIcon, SearchIcon } from "assets";
 import clsx from "clsx";
-import { Button, Menu, Rating, Skeleton, Slider } from "@mui/material";
+import { Button, IconButton, Menu, Rating, Skeleton, Slider } from "@mui/material";
 import currencyService from "services/currencyService";
 import { ESortType } from "configs/enums";
 import * as Yup from "yup";
@@ -15,6 +15,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import useDebounce from "hooks/useDebounce";
 import { useAppDispatch } from "appRedux/hook";
 import { getProductsRequest } from "appRedux/reducers/products/actionTypes";
+import Input from "components/Input";
 
 export const MOCK_PRICE_RANGE = {
   min: 0,
@@ -34,6 +35,7 @@ const DataControl: React.FC<DataControlProps> = memo((props: DataControlProps) =
 
   const validationSchema = useMemo(() => {
     return Yup.object().shape({
+      name: Yup.string(),
       sortBy: Yup.object({
         label: Yup.string(),
         value: Yup.string(),
@@ -54,6 +56,8 @@ const DataControl: React.FC<DataControlProps> = memo((props: DataControlProps) =
   const {
     watch,
     setValue,
+    getValues,
+    register,
     formState: { isDirty },
     control,
   } = useForm<IProductFilters>({
@@ -118,6 +122,23 @@ const DataControl: React.FC<DataControlProps> = memo((props: DataControlProps) =
     setValue("rating", 0);
   };
 
+  const onSearchProduct = () => {
+    const keyword = getValues("name");
+    if (keyword !== products.sortFilterCriteria.name) {
+      dispatch(
+        getProductsRequest({
+          ...products,
+          isSortingOrFiltering: true,
+          meta: { ...products.meta, page: 1 },
+          sortFilterCriteria: {
+            ...products.sortFilterCriteria,
+            name: keyword,
+          },
+        })
+      );
+    }
+  };
+
   return (
     <div className={classes.dataControlContainer}>
       <Select
@@ -162,7 +183,7 @@ const DataControl: React.FC<DataControlProps> = memo((props: DataControlProps) =
         <span> {isFilterPrice ? "Price*" : "Price"}</span>
         <div className={classes.action}>
           {isFilterPrice ? <ClearIcon onClick={onClearPriceFilter} /> : null}
-          <ArrowDown />
+          <ArrowDownIcon />
         </div>
       </Button>
 
@@ -179,9 +200,16 @@ const DataControl: React.FC<DataControlProps> = memo((props: DataControlProps) =
         <span>{isFilterRating ? "Rating*" : "Rating"}</span>
         <div className={classes.action}>
           {isFilterRating ? <ClearIcon onClick={onClearRatingFilter} /> : null}
-          <ArrowDown />
+          <ArrowDownIcon />
         </div>
       </Button>
+
+      <div className={classes.searchContainer}>
+        <Input placeholder="Search ..." textFieldRef={register("name")} />
+        <IconButton className={classes.searchButton} onClick={onSearchProduct}>
+          <SearchIcon />
+        </IconButton>
+      </div>
 
       <Menu
         className={classes.menu}

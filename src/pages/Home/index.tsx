@@ -52,14 +52,12 @@ const HomePage: React.FC<HomePageProps> = memo((props: HomePageProps) => {
     ({ columnIndex, key, rowIndex, style }) => {
       const columnCount = Math.max(1, Math.min(COLUMN_COUNT, Math.floor(containerWidth / 400)));
       const productIndex = rowIndex * columnCount + columnIndex;
+      
+      if (productIndex >= products.data.length) return null;
       return (
-        <Fragment key={key}>
-          {productIndex >= products.data.length ? null : (
-            <div key={key} style={style} ref={products.data.length === productIndex + 1 ? lastPostElementRef : null}>
-              <Product product={products.data[productIndex]} />
-            </div>
-          )}
-        </Fragment>
+        <div key={key} style={style} ref={products.data.length === productIndex + 1 ? lastPostElementRef : null}>
+          <Product product={products.data[productIndex]} />
+        </div>
       );
     },
     [products, containerWidth]
@@ -85,8 +83,8 @@ const HomePage: React.FC<HomePageProps> = memo((props: HomePageProps) => {
                             autoHeight
                             height={height}
                             cellRenderer={gridCellRenderer}
-                            columnWidth={Math.min(400,containerWidth)}
-                            rowHeight={containerWidth <= 720 ? 460 : 537}
+                            columnWidth={Math.min(400, containerWidth)}
+                            rowHeight={containerWidth <= 705 ? 460 : 537}
                             enableFixedColumnScroll
                             enableFixedRowScroll
                             scrollTop={scrollTop}

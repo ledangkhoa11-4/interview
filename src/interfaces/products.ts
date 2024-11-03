@@ -17,6 +17,7 @@ export interface IProduct {
 }
 
 export interface IProductFilters {
+  name?: string;
   sortBy?: ISelectOption;
   categories?: ISelectOption[];
   prices?: number[];
