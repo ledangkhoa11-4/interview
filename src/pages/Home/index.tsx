@@ -113,13 +113,13 @@ const HomePage: React.FC<HomePageProps> = memo((props: HomePageProps) => {
 
             {products.isLoading
               ? Array.from({ length: SKELETON_COUNT }, (_, i) => (
-                  <Skeleton key={`skeleton-${i}`} variant="rectangular" width={360} height={513} style={{ borderRadius: 8 }} />
+                  <Skeleton key={`skeleton-${i}`} variant="rectangular" width={384} height={513} style={{ borderRadius: 8, margin: "0 auto" }} />
                 ))
               : null}
           </Fragment>
         ) : (
           Array.from({ length: SKELETON_COUNT }, (_, i) => (
-            <Skeleton key={`skeleton-${i}`} variant="rectangular" width={360} height={513} style={{ borderRadius: 8 }} />
+            <Skeleton key={`skeleton-${i}`} variant="rectangular" width={384} height={513} style={{ borderRadius: 8 , margin: "0 auto" }} />
           ))
         )}
       </div>
