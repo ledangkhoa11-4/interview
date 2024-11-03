@@ -43,7 +43,28 @@
     input {
       text-align: center !important;
       font-size: 16px;
-      padding: 8px 8px 8px 16px;
+      padding: 8px;
+      /* Chrome, Safari, Edge, Opera */
+      &::-webkit-outer-spin-button,
+      &::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+      }
+
+      /* Firefox */
+      &[type="number"] {
+        -moz-appearance: textfield;
+      }
+    }
+    .quantityContainer {
+      display: flex;
+      gap: 4px;
+      svg {
+        width: 18px;
+      }
+      button {
+        width: 40px;
+      }
     }
   }
   .price {
@@ -67,6 +88,8 @@
 
 .totalPrice {
   display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
   justify-content: space-between;
   align-items: center;
   padding: 24px;
@@ -80,4 +103,9 @@
   position: sticky;
   bottom: 1px;
   background: var(--white);
+  @media only screen and (max-width: 768px) {
+    button {
+      width: 100%;
+    }
+  }
 }

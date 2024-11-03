@@ -13,6 +13,7 @@ import { NoProductFound } from "assets";
 
 const SKELETON_COUNT = 6;
 const COLUMN_COUNT = 3;
+const ITEM_WIDTH = 384;
 
 interface HomePageProps {}
 
@@ -50,7 +51,7 @@ const HomePage: React.FC<HomePageProps> = memo((props: HomePageProps) => {
 
   const gridCellRenderer: GridCellRenderer = useCallback(
     ({ columnIndex, key, rowIndex, style }) => {
-      const columnCount = Math.max(1, Math.min(COLUMN_COUNT, Math.floor(containerWidth / 400)));
+      const columnCount = Math.max(1, Math.min(COLUMN_COUNT, Math.floor(containerWidth / ITEM_WIDTH)));
       const productIndex = rowIndex * columnCount + columnIndex;
       
       if (productIndex >= products.data.length) return null;
@@ -76,14 +77,14 @@ const HomePage: React.FC<HomePageProps> = memo((props: HomePageProps) => {
                   {({ height, scrollTop, isScrolling, onChildScroll }) => (
                     <AutoSizer disableHeight>
                       {({ width }) => {
-                        const columnCount = Math.max(1, Math.min(COLUMN_COUNT, Math.floor(containerWidth / 400)));
+                        const columnCount = Math.max(1, Math.min(COLUMN_COUNT, Math.floor(containerWidth / ITEM_WIDTH)));
                         return (
                           <Grid
                             ref={gridRef}
                             autoHeight
                             height={height}
                             cellRenderer={gridCellRenderer}
-                            columnWidth={Math.min(400, containerWidth)}
+                            columnWidth={Math.min(ITEM_WIDTH, containerWidth)}
                             rowHeight={containerWidth <= 705 ? 460 : 537}
                             enableFixedColumnScroll
                             enableFixedRowScroll

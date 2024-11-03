@@ -14,7 +14,7 @@ const ConfirmModal = memo((props: ConfirmModalProps) => {
   const { isOpen, title, description, onClose, onSubmit } = props;
 
   return (
-    <Dialog transitionDuration={0.3} open={!!isOpen} onClose={onClose} className={classes.container}>
+    <Dialog transitionDuration={0.3} open={!!isOpen} onClose={onClose} className={classes.container} closeAfterTransition={false}>
       <DialogTitle className={classes.title}>{title ?? 'N/A'}</DialogTitle>
       <DialogContent>
         <p className={classes.description}>{description ?? 'N/A'}</p>

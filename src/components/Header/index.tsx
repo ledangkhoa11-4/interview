@@ -12,7 +12,6 @@ interface HeaderProps {}
 const Header: React.FC<HeaderProps> = memo((props: HeaderProps) => {
   const { isExact: isCartPage } = useRouteMatch(appRoutes.public.cart);
 
-  console.log(isCartPage);
   return (
     <div className={classes.header}>
       <Container className={classes.container} maxWidth={false}>

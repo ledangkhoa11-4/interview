@@ -2,7 +2,7 @@ import React, { memo, useMemo, useState } from "react";
 import classes from "./styles.module.scss";
 import { Box, Button, IconButton, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material";
 import { useAppDispatch, useAppSelector } from "appRedux/hook";
-import { ClearIcon, MediaThumbnailPlaceholderImage, NoProductFound } from "assets";
+import { AddIcon, ClearIcon, MediaThumbnailPlaceholderImage, MinusIcon, NoProductFound } from "assets";
 import Input from "components/Input";
 import currencyService from "services/currencyService";
 import { changeQuantityProductCartReducer, removeProductFromCartReducer } from "appRedux/reducers/cart";
@@ -59,16 +59,16 @@ const CartPage: React.FC<CartPageProps> = memo((props: CartPageProps) => {
           <Table>
             <TableHead className={classes.tableHead}>
               <TableRow>
-                <TableCell align="center" width={"45%"}>
+                <TableCell align="center" width={"30%"}>
                   Product
                 </TableCell>
-                <TableCell align="center" width={"10%"}>
+                <TableCell align="center" width={"15%"} style={{minWidth: "150px"}}>
                   Quantity
                 </TableCell>
-                <TableCell align="center" width={"20%"}>
+                <TableCell align="center" width={"10%"} style={{minWidth: "80px"}} >
                   Price
                 </TableCell>
-                <TableCell align="center" width={"20%"}>
+                <TableCell align="center" width={"10%"} style={{minWidth: "80px"}}>
                   Total
                 </TableCell>
                 <TableCell align="center" width={"5%"}>
@@ -91,18 +91,34 @@ const CartPage: React.FC<CartPageProps> = memo((props: CartPageProps) => {
                         </div>
                       </TableCell>
                       <TableCell align="center" component="th" scope="row" className={classes.quantityInput}>
-                        <Input
-                          type="number"
-                          style={{ textAlign: "center" }}
-                          value={cartItem.quantity}
-                          onKeyDown={(evt: React.KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-                            ["e", "E", "+", "-"].includes(evt.key) && evt.preventDefault();
-                          }}
-                          onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-                            onChangeQuantity(cartItem.product, Number(e.target.value));
-                          }}
-                          inputProps={{ min: 0, max: MAX_QUANTITY_PRODUCT }}
-                        />
+                        <div className={classes.quantityContainer}>
+                          <IconButton
+                            onClick={() => {
+                              onChangeQuantity(cartItem.product, cartItem.quantity - 1);
+                            }}
+                          >
+                            <MinusIcon />
+                          </IconButton>
+                          <Input
+                            type="number"
+                            style={{ textAlign: "center" }}
+                            value={cartItem.quantity}
+                            onKeyDown={(evt: React.KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+                              ["e", "E", "+", "-"].includes(evt.key) && evt.preventDefault();
+                            }}
+                            onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+                              onChangeQuantity(cartItem.product, Number(e.target.value));
+                            }}
+                            inputProps={{ min: 0, max: MAX_QUANTITY_PRODUCT }}
+                          />
+                          <IconButton
+                            onClick={() => {
+                              onChangeQuantity(cartItem.product, cartItem.quantity + 1);
+                            }}
+                          >
+                            <AddIcon />
+                          </IconButton>
+                        </div>
                       </TableCell>
                       <TableCell align="center" component="th" scope="row" className={classes.price}>
                         <p>{currencyService.formatPrice(cartItem.product.price)}</p>
