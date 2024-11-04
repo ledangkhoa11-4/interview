@@ -10,9 +10,10 @@
     "@hookform/resolvers": "^3.9.1",
     "@mui/material": "^6.1.5",
     "@reduxjs/toolkit": "^2.3.0",
-    "@testing-library/jest-dom": "^5.14.1",
-    "@testing-library/react": "^13.0.0",
-    "@testing-library/user-event": "^13.2.1",
+    "@testing-library/dom": "^10.4.0",
+    "@testing-library/jest-dom": "^5.17.0",
+    "@testing-library/react": "^16.0.0",
+    "@testing-library/user-event": "^13.5.0",
     "@types/jest": "^27.0.1",
     "@types/node": "^16.7.13",
     "@types/react": "^18.0.0",
@@ -21,6 +22,7 @@
     "@types/react-virtualized": "^9.21.30",
     "axios": "^1.7.7",
     "clsx": "^2.1.1",
+    "identity-obj-proxy": "^3.0.0",
     "numeral": "^2.0.6",
     "path-to-regexp": "^8.2.0",
     "react": "^18.3.1",
@@ -42,7 +44,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test",
+    "test": "jest",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
