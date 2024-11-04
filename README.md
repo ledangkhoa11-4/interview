@@ -37,7 +37,7 @@
 
 ---
 
-### Approach and Challenges Faced During Development
+## Approach and Challenges Faced During Development
 
 **1. Project Initialization**:
 
@@ -87,7 +87,7 @@
 - **Product Search Functionality**: I added a search bar to filter products by name and description, improving user experience.
 ***
 
-### Challenges
+## Challenges
 
 - **Performance Maintenance**: I have to ensure optimal performance and adherence to best practices (e.g., PageSpeed and Chrome Lighthouse scores) during application development. Just some changes in CSS can seriously reduce performance scores.
 
