@@ -6,6 +6,7 @@ import { GET_PRODUCTS_REQUEST } from "appRedux/reducers/products/actionTypes";
 import { PayloadAction } from "@reduxjs/toolkit";
 import { IProduct } from "interfaces/products";
 import { ESortType } from "configs/enums";
+import { MOCK_PRICE_RANGE } from "components/DataControl";
 
 function sortProducts(products: IProduct[], type: ESortType): IProduct[] {
   return products.slice().sort((a, b) => {
@@ -41,11 +42,17 @@ function* getProductsRequest(action: PayloadAction<IProductState>) {
     const categories = action.payload.sortFilterCriteria.categories;
     const prices = action.payload.sortFilterCriteria.prices;
     const rating = action.payload.sortFilterCriteria.rating;
-    const fetchAll = action.payload.sortFilterCriteria.sortBy !== null || categories?.length || prices || rating || name; // Fetch all products to sort
+    const fetchAll =
+      action.payload.sortFilterCriteria.sortBy !== null ||
+      !!categories?.length ||
+      (prices?.length && (prices?.[0] !== MOCK_PRICE_RANGE.min || prices?.[1] !== MOCK_PRICE_RANGE.max)) ||
+      !!rating ||
+      !!name; // Fetch all products to sort
 
     const meta = { ...action.payload.meta };
-    const take = meta.limit * meta.page;
+    let take = meta.limit * meta.page;
     let products = yield call(apiService.GET, `${apiRoutes.products.default}${!fetchAll ? `?limit=${take}` : ""}`);
+    if (fetchAll) take = products.length;
 
     // Stimulate sorting and filtering
     if (name) {
@@ -67,13 +74,12 @@ function* getProductsRequest(action: PayloadAction<IProductState>) {
     }
 
     const productsResult = products.slice(0, take);
-    meta.hasMore = products.length !== action.payload.data?.length || (fetchAll && take < products.length);
-    if (fetchAll && take > products.length) {
+ 
+    if (fetchAll && take >= products.length) {
       meta.hasMore = false;
     } else {
       meta.hasMore = products.length !== action.payload.data?.length;
     }
-
     yield put(
       setProducts({
         isLoading: false,
